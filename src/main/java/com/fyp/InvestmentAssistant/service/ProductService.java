@@ -3,6 +3,7 @@ package com.fyp.InvestmentAssistant.service;
 import com.fyp.InvestmentAssistant.DTO.ProductDetailView;
 import com.fyp.InvestmentAssistant.entities.Category;
 import com.fyp.InvestmentAssistant.entities.Products;
+import com.fyp.InvestmentAssistant.entities.Vendor;
 import com.fyp.InvestmentAssistant.model.ProductDetailRowMapper;
 import com.fyp.InvestmentAssistant.repository.CategoryRepository;
 import com.fyp.InvestmentAssistant.repository.ProductRepository;
@@ -52,5 +53,9 @@ public class ProductService {
         finalProducts=finalProducts.substring(0,finalProducts.length()-1);
 
         return productRepository.findProductsByBulk(finalProducts);
+    }
+
+    public List<Vendor> getVendorsList(){
+        return null;
     }
 }

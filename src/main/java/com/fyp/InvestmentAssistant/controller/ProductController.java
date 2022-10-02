@@ -29,5 +29,9 @@ public class ProductController {
        return productService.getProducts(budgetAndCategory.getUserId(),budgetAndCategory.getCategoryId(),budgetAndCategory.getBudget());
     }
 
+    @RequestMapping(value = "/getVendors",method = RequestMethod.POST)
+    public List<Products> getVendors(@RequestBody BudgetAndCategory budgetAndCategory){
+        return productService.getProducts(budgetAndCategory.getUserId(),budgetAndCategory.getCategoryId(),budgetAndCategory.getBudget());
+    }
 
 }
