@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCT")
-public class Products {
+public class Products{
     @Id
     private int productId;
     @Column(name = "PRODUCT_NAME")
@@ -69,4 +69,5 @@ public class Products {
     public void setmStrategy(String mStrategy) {
         this.mStrategy = mStrategy;
     }
+
 }

@@ -11,7 +11,7 @@
 	<groupId>com.fyp</groupId>
 	<artifactId>InvestmentAssistant</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>InvestmentAssistant</name>
+	<name>InvestmentAswagssistant</name>
 	<description>Online Investment Assistant</description>
 	<properties>
 		<java.version>1.8</java.version>

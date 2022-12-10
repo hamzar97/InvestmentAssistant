@@ -1,5 +1,7 @@
 package com.fyp.InvestmentAssistant.entities;
 
+import org.hibernate.annotations.Columns;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,6 +12,7 @@ import javax.persistence.Table;
 public class Users {
 
     @Id
+    @Column(name="USERID")
     private long userId;
 
     @Column(name="USERNAME")
