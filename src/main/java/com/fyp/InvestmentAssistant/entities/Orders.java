@@ -1,9 +1,6 @@
 package com.fyp.InvestmentAssistant.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "ORDERS")
@@ -12,11 +9,11 @@ public class Orders {
     @Id
     private int orderId;
     @Column(name = "USERID")
-    private String userId;
+    private int userId;
     @Column(name = "VENDOR_ID")
     private int vendorId;
     @Column(name = "PRODUCT_ID")
-    private long productId;
+    private int productId;
     @Column(name = "ORDER_STATUS")
     private String orderStatus;
     @Column(name = "TOTAL_PRICE")
@@ -34,11 +31,11 @@ public class Orders {
         this.orderId = orderId;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -50,11 +47,11 @@ public class Orders {
         this.vendorId = vendorId;
     }
 
-    public long getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(long productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 

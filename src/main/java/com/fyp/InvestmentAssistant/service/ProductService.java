@@ -76,4 +76,12 @@ public class ProductService {
         Collections.sort(vendorDetailsAndParamsList,compareByPerUnitPrice);
         return vendorDetailsAndParamsList;
     }
+
+    public ProductDetailView getVendor(int vendorId,int productId){
+        List<VendorDetailsAndParams> vendorDetailsAndParamsList=new ArrayList<>();
+        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from ProductDetailsView WHERE PRODUCT_ID = ? AND VENDOR_ID = ?;";
+        List<ProductDetailView> pdv=jdbcTemplate.query(sql,new ProductDetailRowMapper(),productId,vendorId);
+
+        return pdv.get(0);
+    }
 }

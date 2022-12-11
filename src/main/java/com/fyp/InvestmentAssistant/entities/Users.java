@@ -2,17 +2,15 @@ package com.fyp.InvestmentAssistant.entities;
 
 import org.hibernate.annotations.Columns;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "USERS")
 public class Users {
 
     @Id
-    @Column(name="USERID")
+    @Column(name = "USERID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
     @Column(name="USERNAME")

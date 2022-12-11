@@ -5,6 +5,7 @@ import com.fyp.InvestmentAssistant.DTO.VendorDetailsAndParams;
 import com.fyp.InvestmentAssistant.entities.Category;
 import com.fyp.InvestmentAssistant.entities.Orders;
 import com.fyp.InvestmentAssistant.entities.Products;
+import com.fyp.InvestmentAssistant.entities.Vendor;
 import com.fyp.InvestmentAssistant.repository.OrderRepository;
 import com.fyp.InvestmentAssistant.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.List;
 
 @CrossOrigin
@@ -49,8 +51,41 @@ public class ProductController {
 
     @RequestMapping(value = "/placeOrder",method = RequestMethod.POST)
     public ResponseEntity<?> placeOrder(@RequestBody Orders orders){
+        String userId=Integer.toString(orders.getUserId());
+        String productId=Integer.toString(orders.getProductId());
+        String vendorId=Integer.toString(orders.getVendorId());
+        String finalOrderId=userId+productId+vendorId;
+        orders.setOrderId(Integer.parseInt(finalOrderId));
         orders.setOrderStatus("PENDING");
         orders.setTotalPrice(orders.getTotalQuantity()*orders.getPerUnitPrice());
-        return new ResponseEntity<>(orderRepository.save(orders), HttpStatus.OK);
+        String finalResult="SUCCESS";
+        try {
+            Orders orderToCheck = orderRepository.findByProductIdAndVendorIdAndUserId(orders.getProductId(), orders.getVendorId(), orders.getUserId());
+            if (orderToCheck.getProductId() == orders.getProductId()) {
+                if (orderToCheck.getVendorId() == orders.getVendorId()) {
+                    if (orderToCheck.getUserId() == orders.getUserId()) {
+                        finalResult = "ERROR";
+                    }
+                }
+            }
+        }catch (Exception e){
+            System.out.println("Order Doesnot exist");
+        }
+        if(finalResult=="SUCCESS"){
+            orderRepository.save(orders);
+        }
+
+        return new ResponseEntity<>(finalResult, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getOrder",method = RequestMethod.POST)
+    public ResponseEntity<?> getOrder(@RequestBody Orders orders){
+          return new ResponseEntity<>(orderRepository.findByProductIdAndVendorIdAndUserId(orders.getProductId(), orders.getVendorId(), orders.getUserId()), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/Vendor/{vendorId}",method = RequestMethod.POST)
+    public ResponseEntity<?> placeOrder(@PathVariable(name = "vendorId") int vendorId,
+                                        @RequestBody Products products){
+
+        return new ResponseEntity<>(productService.getVendor(vendorId,products.getProductId()),HttpStatus.OK);
     }
 }
