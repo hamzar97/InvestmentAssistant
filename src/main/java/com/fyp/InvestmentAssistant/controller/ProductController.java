@@ -58,34 +58,25 @@ public class ProductController {
         orders.setOrderId(Integer.parseInt(finalOrderId));
         orders.setOrderStatus("PENDING");
         orders.setTotalPrice(orders.getTotalQuantity()*orders.getPerUnitPrice());
-        String finalResult="SUCCESS";
-        try {
-            Orders orderToCheck = orderRepository.findByProductIdAndVendorIdAndUserId(orders.getProductId(), orders.getVendorId(), orders.getUserId());
-            if (orderToCheck.getProductId() == orders.getProductId()) {
-                if (orderToCheck.getVendorId() == orders.getVendorId()) {
-                    if (orderToCheck.getUserId() == orders.getUserId()) {
-                        finalResult = "ERROR";
-                    }
-                }
-            }
-        }catch (Exception e){
-            System.out.println("Order Doesnot exist");
-        }
-        if(finalResult=="SUCCESS"){
+        Orders orders1=orderRepository.findByOrderId(Integer.parseInt(finalOrderId));
+        if(orders1==null){
             orderRepository.save(orders);
         }
-
-        return new ResponseEntity<>(finalResult, HttpStatus.OK);
+        productService.sendOrderEmail(orders);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getOrder",method = RequestMethod.POST)
     public ResponseEntity<?> getOrder(@RequestBody Orders orders){
           return new ResponseEntity<>(orderRepository.findByProductIdAndVendorIdAndUserId(orders.getProductId(), orders.getVendorId(), orders.getUserId()), HttpStatus.OK);
     }
-    @RequestMapping(value = "/Vendor/{vendorId}",method = RequestMethod.POST)
+    @RequestMapping(value = "/getAllOrder/{userId}",method = RequestMethod.GET)
+    public ResponseEntity<?> getAllOrder(@PathVariable("userId") int userId){
+        return new ResponseEntity<>(orderRepository.findByUserId(userId), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/Vendor/{vendorId}/{productId}",method = RequestMethod.POST)
     public ResponseEntity<?> placeOrder(@PathVariable(name = "vendorId") int vendorId,
-                                        @RequestBody Products products){
-
-        return new ResponseEntity<>(productService.getVendor(vendorId,products.getProductId()),HttpStatus.OK);
+                                        @PathVariable(name = "productId")  int productId){
+        return new ResponseEntity<>(productService.getVendor(vendorId,productId),HttpStatus.OK);
     }
 }

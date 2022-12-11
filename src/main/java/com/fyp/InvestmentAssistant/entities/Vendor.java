@@ -19,6 +19,8 @@ public class Vendor {
     private String phoneNo;
     @Column(name="VENDOR_PICTURE")
     private String vendorPicture;
+    @Column(name="EMAIL")
+    private String vendorEmail;
 
     public Long getVendorId() {
         return vendorId;
@@ -58,5 +60,13 @@ public class Vendor {
 
     public void setVendorPicture(String vendorPicture) {
         this.vendorPicture = vendorPicture;
+    }
+
+    public String getVendorEmail() {
+        return vendorEmail;
+    }
+
+    public void setVendorEmail(String vendorEmail) {
+        this.vendorEmail = vendorEmail;
     }
 }

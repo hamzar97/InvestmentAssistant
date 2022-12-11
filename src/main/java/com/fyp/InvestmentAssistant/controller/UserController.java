@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value="/User")
 public class UserController {
@@ -24,11 +26,12 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/SaveBudget/{userId}",method = RequestMethod.POST)
-    public ResponseEntity<Users> saveBudget(@PathVariable("userId") Users users,@RequestBody Long budget){
+    @RequestMapping(value = "/SaveBudget/{userId}/{budget}",method = RequestMethod.POST)
+    public ResponseEntity<Users> saveBudget(@PathVariable("userId") long userId,@PathVariable("budget") long budget){
+        Users users=userRepository.findByUserId(userId);
         users.setLastBudget(budget);
-    Users user=userService.saveBudget(users);
-    return new ResponseEntity<>(user, HttpStatus.OK);
+        userRepository.save(users);
+    return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
@@ -62,6 +65,17 @@ public class UserController {
             userRepository.save(user);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getUser/{userId}",method = RequestMethod.GET)
+    public ResponseEntity<?> findById(@PathVariable("userId") long userId){
+        return new ResponseEntity<>(userRepository.findById(userId),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateUser/{userId}",method = RequestMethod.PUT)
+    public ResponseEntity<?> updateById(@PathVariable("userId") long userId,@RequestBody Users users){
+        users.setUserId(userId);
+        return new ResponseEntity<>(userRepository.save(users),HttpStatus.OK);
     }
 
 }

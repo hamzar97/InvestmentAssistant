@@ -2,15 +2,16 @@ package com.fyp.InvestmentAssistant.service;
 
 import com.fyp.InvestmentAssistant.DTO.ProductDetailView;
 import com.fyp.InvestmentAssistant.DTO.VendorDetailsAndParams;
-import com.fyp.InvestmentAssistant.entities.Category;
-import com.fyp.InvestmentAssistant.entities.Products;
-import com.fyp.InvestmentAssistant.entities.Vendor;
+import com.fyp.InvestmentAssistant.entities.*;
 import com.fyp.InvestmentAssistant.model.ProductDetailRowMapper;
 import com.fyp.InvestmentAssistant.repository.CategoryRepository;
 import com.fyp.InvestmentAssistant.repository.ProductRepository;
+import com.fyp.InvestmentAssistant.repository.UserRepository;
 import com.fyp.InvestmentAssistant.repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,7 +29,13 @@ public class ProductService {
     VendorRepository vendorRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    JavaMailSender javaMailSender;
 
     public List<Category> getAllCategories(){
         return categoryRepository.findAll();
@@ -81,7 +88,40 @@ public class ProductService {
         List<VendorDetailsAndParams> vendorDetailsAndParamsList=new ArrayList<>();
         String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from ProductDetailsView WHERE PRODUCT_ID = ? AND VENDOR_ID = ?;";
         List<ProductDetailView> pdv=jdbcTemplate.query(sql,new ProductDetailRowMapper(),productId,vendorId);
+        ProductDetailView productDetailView=null;
+        try{
+            productDetailView=pdv.get(0);
+        }catch(Exception e){
 
-        return pdv.get(0);
+        }
+        return productDetailView;
+    }
+
+    public boolean sendOrderEmail(Orders orders){
+        boolean isEmailSent=true;
+        Users users= userRepository.findByUserId((long)orders.getUserId());
+        Products products=productRepository.findByProductId(orders.getProductId());
+        Vendor vendor=vendorRepository.findByVendorId((long)orders.getVendorId());
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("investmentassistant@kawaiistore.pk");
+        message.setTo(vendor.getVendorEmail());
+        message.setSubject("ORDER RECIEVED: "+orders.getOrderId());
+        message.setText("Order Recieved!\n " +
+                "\nCustomer Name: " +users.getFullName()+
+                "\nCustomer Email: " +users.getEmail()+
+                "\nCustomer Phone No.: " +users.getPhoneNo()+
+                "\nCustomer Address: " +users.getAddress()+
+                "\n\nOrder ID: " +orders.getOrderId()+
+                "\nOrder Quantity: " +orders.getTotalQuantity()+
+                "\nOrder Total Amount: " +orders.getTotalPrice()+
+                "\nProduct Name: " +products.getProductName().trim()+
+                "\nProduct Per unit Price: " +orders.getPerUnitPrice()+
+                "\n\nFrom \n\nInvestment Assistant");
+        try {
+            javaMailSender.send(message);
+        }catch (Exception e){
+            isEmailSent=false;
+        }
+        return isEmailSent;
     }
 }
