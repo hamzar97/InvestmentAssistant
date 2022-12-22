@@ -46,7 +46,7 @@ public class ProductService {
         Set<Integer> productIds=new HashSet<>();
         String finalProducts="";
         long finalResult=0;
-        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from ProductDetailsView WHERE CATEGORY_ID = ?;";
+        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from productdetailsview WHERE CATEGORY_ID = ?;";
         List<ProductDetailView> pdv=jdbcTemplate.query(sql,new ProductDetailRowMapper(),categoryId);
         for(ProductDetailView prod: pdv){
             finalResult=budget/prod.getPERUNITPRICE();
@@ -65,7 +65,7 @@ public class ProductService {
 
     public List<VendorDetailsAndParams> getVendorsList(int productId){
         List<VendorDetailsAndParams> vendorDetailsAndParamsList=new ArrayList<>();
-        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from ProductDetailsView WHERE PRODUCT_ID = ?;";
+        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from productdetailsview WHERE PRODUCT_ID = ?;";
         List<ProductDetailView> pdv=jdbcTemplate.query(sql,new ProductDetailRowMapper(),productId);
 
         for(ProductDetailView prod: pdv){
@@ -86,7 +86,7 @@ public class ProductService {
 
     public ProductDetailView getVendor(int vendorId,int productId){
         List<VendorDetailsAndParams> vendorDetailsAndParamsList=new ArrayList<>();
-        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from ProductDetailsView WHERE PRODUCT_ID = ? AND VENDOR_ID = ?;";
+        String sql="select PRODUCT_ID,PRODUCT_NAME,CATEGORY_ID,PRODUCT_SALES,PRODUCT_DESC,MSTRATEGY,PRODUCTDETAIL_ID,VENDOR_ID,MIN_ORDER,PERUNITPRICE,VENDOR_NAME,ADDRESS,PHONE_NO,VENDOR_PICTURE from productdetailsview WHERE PRODUCT_ID = ? AND VENDOR_ID = ?;";
         List<ProductDetailView> pdv=jdbcTemplate.query(sql,new ProductDetailRowMapper(),productId,vendorId);
         ProductDetailView productDetailView=null;
         try{

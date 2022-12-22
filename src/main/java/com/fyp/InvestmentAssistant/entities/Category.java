@@ -1,15 +1,14 @@
 package com.fyp.InvestmentAssistant.entities;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "CATEGORY")
 public class Category {
     @Id
+    @Column(name = "CATEGORY_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int categoryId;
     @Column(name = "CATEGORY_NAME")
     private String categoryName;
